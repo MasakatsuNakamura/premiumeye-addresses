@@ -12,10 +12,12 @@ phases:
   build:
     commands:
       - apt-get update -y
-      - apt-get install -y ruby
+      - apt-get install -y ruby python3
+      - pip3 isntall awscli
       - mkdir tmp
       - gem install rubyzip
       - ruby app.rb
+      - aws s3 sync s3://tasuki-japanese-addresses/test tmp/
 
   # post_build:
 
