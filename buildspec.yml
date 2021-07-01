@@ -13,6 +13,7 @@ phases:
     commands:
       - apt-get update -y
       - apt-get install -y ruby
+      - mkdir tmp
       - gem install rubyzip
       - ruby app.rb
 
