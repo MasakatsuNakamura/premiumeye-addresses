@@ -13,7 +13,7 @@ phases:
     commands:
       - apt-get update -y
       - apt-get install -y ruby python3 python3-pip
-      - pip3 isntall awscli
+      - python3 -m pip isntall awscli
       - mkdir tmp
       - gem install rubyzip
       - ruby app.rb
