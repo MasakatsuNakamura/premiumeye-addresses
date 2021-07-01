@@ -1,0 +1,23 @@
+version: 0.2
+
+env:
+  variables:
+    AWS_DEFAULT_REGION: ap-northeast-1
+    DEBIAN_FRONTEND: noninteractive
+    TZ: Asia/Tokyo
+
+phases:
+  # pre_build:
+
+  build:
+    commands:
+      - apt-get update -y
+      - apt-get install -y ruby
+      - gem install rubyzip
+      - ruby app.rb
+
+  # post_build:
+
+# artifacts:
+#   files:
+#     - masked_db_dump.sql
