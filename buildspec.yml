@@ -17,7 +17,7 @@ phases:
       - mkdir tmp
       - gem install rubyzip
       - ruby app.rb
-      - aws s3 sync ./tmp s3://tasuki-japanese-addresses/tmp
+      - aws s3 sync ./tmp s3://tasuki-japanese-addresses
 
   # post_build:
 
