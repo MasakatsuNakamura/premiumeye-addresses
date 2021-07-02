@@ -54,7 +54,7 @@ Zip::File.open('tmp/ken_all.zip') do |zip_file|
       Dir.mkdir("tmp/ja/#{prefecture}", 0777)
       part[prefecture].each_key do |city|
         f = open("tmp/ja/#{prefecture}/#{city}.json", 'w')
-        f.write(part[prefecture][city])
+        f.write(part[prefecture][city].to_json)
         f.close
       end
     end
