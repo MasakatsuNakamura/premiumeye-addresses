@@ -29,7 +29,7 @@ Zip::File.open('tmp/ken_all.zip') do |zip_file|
       town_kana = row[5]
 
       town_excludes = (['\A以下に掲載がない場合\z', '（[^階）]*階）'] + ENV['TOWN_EXCLUDES'].split(',')).join('|')
-      if town.match?(RegExp.new(town_excludes))
+      if town.match?(Regexp.new(town_excludes))
         x.write([prefecture, city, city_kana, town, town_kana].join(','))
         next
       end
