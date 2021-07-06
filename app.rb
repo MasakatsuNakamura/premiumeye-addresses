@@ -17,6 +17,8 @@ Zip::File.open('tmp/ken_all.zip') do |zip_file|
     f.write(entry.get_input_stream.read)
     f.close
 
+    x = open('tmp/excludes.csv', 'w')
+
     all = {}
     part = {}
     CSV.foreach("tmp/#{entry.name}", encoding: "CP932:UTF-8", headers: false) do |row|
@@ -27,7 +29,10 @@ Zip::File.open('tmp/ken_all.zip') do |zip_file|
       town_kana = row[5]
 
       town_excludes = (['\A以下に掲載がない場合\z', '（[^階）]*階）'] + ENV['TOWN_EXCLUDES'].split(',')).join('|')
-      next if town.match?(/#{town_excludes}/)
+      if town.match?(RegExp.new(town_excludes))
+        x.write([prefecture, city, city_kana, town, town_kana].join(','))
+        next
+      end
 
       town.gsub!(/（[^）]*）/, '')
       town_kana.gsub!(/\([^)]*\)/, '')
@@ -39,6 +44,9 @@ Zip::File.open('tmp/ken_all.zip') do |zip_file|
       part[prefecture][city] = [] unless part[prefecture].key?(city)
       part[prefecture][city].append({ town: town, town_kana: town_kana }) unless part[prefecture][city].select { |r| r[:town] == town }.any?
     end
+
+    x.close
+
     all.each_key do |prefecture|
       all[prefecture].sort! { |a, b| a[1] <=> b[1] }.map! { |r| r[0] }
     end
