@@ -25,7 +25,9 @@ Zip::File.open('tmp/ken_all.zip') do |zip_file|
       town = row[8]
       city_kana = row[4]
       town_kana = row[5]
-      next if town == '以下に掲載がない場合' || town.match?(/（[^階）]*階）/)
+
+      town_excludes = (['\A以下に掲載がない場合\z', '（[^階）]*階）'] + ENV['TOWN_EXCLUDES'].split(',')).join('|')
+      next if town.match?(/#{town_excludes}/)
 
       town.gsub!(/（[^）]*）/, '')
       town_kana.gsub!(/\([^)]*\)/, '')
