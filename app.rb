@@ -28,14 +28,14 @@ Zip::File.open('tmp/ken_all.zip') do |zip_file|
       city_kana = row[4]
       town_kana = row[5]
 
-      town_excludes = (['\A以下に掲載がない場合\z', '（[^階）]*階）'] + ENV['TOWN_EXCLUDES'].split(',')).join('|')
+      town.gsub!(/（[^）]*）/, '')
+      town_kana.gsub!(/\([^)]*\)/, '')
+
+      town_excludes = (['\A以下に掲載がない場合\z'] + ENV['TOWN_EXCLUDES'].split(',')).join('|')
       if town.match?(Regexp.new(town_excludes))
         x.write("#{[prefecture, city, city_kana, town, town_kana].join(',')}\n")
         next
       end
-
-      town.gsub!(/（[^）]*）/, '')
-      town_kana.gsub!(/\([^)]*\)/, '')
 
       all[prefecture] = [] unless all.key?(prefecture)
       all[prefecture].append([city, city_kana]) unless all[prefecture].select { |r| r[0] == city }.any?
