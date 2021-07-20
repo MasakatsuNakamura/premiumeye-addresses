@@ -48,7 +48,7 @@ Zip::File.open('tmp/ken_all.zip') do |zip_file|
     x.close
 
     all.each_key do |prefecture|
-      all[prefecture].sort! { |a, b| a[1] <=> b[1] }.map! { |r| r[0] }
+      all[prefecture].sort! { |a, b| a[0] <=> b[0] }.map! { |r| r[0] }
     end
     part.each_key do |prefecture|
       part[prefecture].each_key do |city|
