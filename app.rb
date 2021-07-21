@@ -22,6 +22,7 @@ Zip::File.open('tmp/ken_all.zip') do |zip_file|
     all = {}
     part = {}
     CSV.foreach("tmp/#{entry.name}", encoding: "CP932:UTF-8", headers: false) do |row|
+      code = row[0]
       prefecture = row[6]
       city = row[7]
       town = row[8]
@@ -38,7 +39,7 @@ Zip::File.open('tmp/ken_all.zip') do |zip_file|
       end
 
       all[prefecture] = [] unless all.key?(prefecture)
-      all[prefecture].append([city, city_kana]) unless all[prefecture].select { |r| r[0] == city }.any?
+      all[prefecture].append([city, code]) unless all[prefecture].select { |r| r[0] == city }.any?
 
       part[prefecture] = {} unless part.key?(prefecture)
       part[prefecture][city] = [] unless part[prefecture].key?(city)
@@ -48,7 +49,7 @@ Zip::File.open('tmp/ken_all.zip') do |zip_file|
     x.close
 
     all.each_key do |prefecture|
-      all[prefecture].sort! { |a, b| a[0] <=> b[0] }.map! { |r| r[0] }
+      all[prefecture].sort! { |a, b| a[1] <=> b[1] }.map! { |r| r[0] }
     end
     part.each_key do |prefecture|
       part[prefecture].each_key do |city|
