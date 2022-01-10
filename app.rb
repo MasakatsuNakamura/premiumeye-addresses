@@ -21,8 +21,10 @@ Zip::File.open('tmp/ken_all.zip') do |zip_file|
 
     all = {}
     part = {}
+    zipcodes = {}
     CSV.foreach("tmp/#{entry.name}", encoding: "CP932:UTF-8", headers: false) do |row|
       code = row[0]
+      zipcode = row[2]
       prefecture = row[6]
       city = row[7]
       town = row[8]
@@ -44,6 +46,9 @@ Zip::File.open('tmp/ken_all.zip') do |zip_file|
       part[prefecture] = {} unless part.key?(prefecture)
       part[prefecture][city] = [] unless part[prefecture].key?(city)
       part[prefecture][city].append({ town: town, town_kana: town_kana }) unless part[prefecture][city].select { |r| r[:town] == town }.any?
+
+      zipcodes[zipcode[0..2]] = {} unless zipcodes.key?(zipcode[0..2])
+      zipcodes[zipcode[0..2]][zipcode] = [prefecture, city, town]
     end
 
     x.close
@@ -67,6 +72,12 @@ Zip::File.open('tmp/ken_all.zip') do |zip_file|
         f = open("tmp/ja/#{prefecture}/#{city}.json", 'w')
         f.write(part[prefecture][city].to_json)
         f.close
+      end
+    end
+    Dir.mkdir("tmp/zipcode", 0777)
+    zipcodes.each do |zipcode, address|
+      open("tmp/zipcode/#{zipcode}.json", 'w') do |f|
+        f.write(address.to_json)
       end
     end
   end
